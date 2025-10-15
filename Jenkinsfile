@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'docker-1'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
         IMAGE_NAME = 'aditi1903/assign_11'
     }
 
@@ -35,3 +35,4 @@ pipeline {
         }
     }
 }
+
