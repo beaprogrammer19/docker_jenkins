@@ -3,13 +3,13 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
-        IMAGE_NAME = 'aditi1903/assign_11'
+        IMAGE_NAME = 'aditi1903/myapp'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/beaprogrammer19/devops-ise3.git'
+                git branch: 'main', url: 'https://github.com/beaprogrammer19/docker_jenkins.git'
 
             }
         }
@@ -35,4 +35,5 @@ pipeline {
         }
     }
 }
+
 
