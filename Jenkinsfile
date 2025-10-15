@@ -2,24 +2,35 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
-        IMAGE_NAME = 'aditi1903/myapp'
+        DOCKER_IMAGE = "aditi1903/myappe"   // ✅ Docker Hub repo name
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
+                // ✅ Checkout from main branch
                 git branch: 'main', url: 'https://github.com/beaprogrammer19/docker_jenkins.git'
-
             }
         }
 
-        stage('Build and Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKERHUB_CREDENTIALS}") {
-                        def app = docker.build("${IMAGE_NAME}:latest")
-                        app.push()
+                    // ✅ Windows Jenkins agent command
+                    bat 'docker build -t %DOCKER_IMAGE%:latest .'
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    // ✅ Safely use Jenkins credentials here
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat """
+                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                            docker push %DOCKER_IMAGE%:latest
+                        """
                     }
                 }
             }
@@ -31,9 +42,7 @@ pipeline {
             echo '✅ Docker image built and pushed successfully!'
         }
         failure {
-            echo '❌ Build failed. Check logs.'
+            echo '❌ Build failed!'
         }
     }
 }
-
-
